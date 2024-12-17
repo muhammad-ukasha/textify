@@ -5,10 +5,11 @@ import WelcomeSection from "../components/welcomescreen";
 // import ButtonGroup from '../../components/buttongroup';
 
 const signup = () => {
+  console.log()
   return (
     <View style={styles.container}>
       <Header />
-      <WelcomeSection />
+      <WelcomeSection  />
     </View>
   );
 };

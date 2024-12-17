@@ -7,7 +7,7 @@ const WelcomeSection = () => {
     <View style={styles.welcomeContainer}>
       <Text style={styles.welcomeText}>Welcome</Text>
       <Text style={styles.subtitleText}>Get started with your account</Text>
-      <ButtonGroup />
+      <ButtonGroup  />
     </View>
   );
 };

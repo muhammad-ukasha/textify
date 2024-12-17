@@ -1,9 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const BackButton = () => {
+const BackButton = ({onPress}) => {
   return (
-    <TouchableOpacity  style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <Text style={styles.text}>{'<'} Back</Text>
     </TouchableOpacity>
   );

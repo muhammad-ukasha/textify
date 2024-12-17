@@ -4,16 +4,22 @@ import BackButton from "../components/backbutton";
 import Header from "../components/header";
 import Form from "../components/signupForm";
 import SignUpButton from "../components/signupButton";
-// import Footer from "../components/signupFooter";
+import Footer from "../components/signupFooter";
+import { useNavigation } from "@react-navigation/native";
 
 const SignUpScreen = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <BackButton />
+      <BackButton onPress={() => navigation.goBack()} />
       <Header />
       <Form />
-      <SignUpButton  />
-      {/* <Footer /> */}
+      <SignUpButton />
+      <Footer
+        title="Already have Account?"
+        link="signIn"
+        onPress={() => navigation.navigate("signin")}
+      />
     </View>
   );
 };
