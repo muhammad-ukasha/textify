@@ -62,14 +62,14 @@ const MeetingScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Meeting App</Text>
-        {/* <View style={styles.headerButtons}>
+        <View style={styles.headerButtons}>
           <TouchableOpacity style={styles.startMeetingButton}>
             <Text style={styles.buttonText}>Start Meeting</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.joinMeetingButton}>
-            <Text style={styles.buttonText}>Join a meeting</Text>
+            <Text style={styles.buttonText1 } >Join a meeting</Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
 
       {/* Meeting List */}
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
   joinMeetingButton: {
     backgroundColor: '#fff',
     borderColor: '#007bff',
+    color: 'blue',
     borderWidth: 1,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -132,6 +133,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
+    fontWeight: 'bold',
+  },
+  buttonText1: {
+    color: '#007bff',
     fontWeight: 'bold',
   },
   dateSection: {

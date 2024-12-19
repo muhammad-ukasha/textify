@@ -12,6 +12,7 @@ const BackButton = ({onPress}) => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
+    
   },
   text: {
     color: '#007bff',

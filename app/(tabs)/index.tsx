@@ -8,6 +8,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Signup from "../../screens/signup";
 import SignupScreen from "../../screens/SignUpScreen";
 import SignInScreen from "@/screens/signInScreen";
+import MeetingScreen from '../../screens/meetingScreen'
+import otpScreen from '../../screens/otpScreen'
 
 const Stack = createStackNavigator();
 
@@ -20,7 +22,7 @@ const App = () => {
     <Stack.Navigator initialRouteName="welcom">
       <Stack.Screen
         name="welcom"
-        component={Signup}
+        component={otpScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
