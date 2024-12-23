@@ -1,18 +1,38 @@
-import React from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 const SignInForm = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
   return (
     <View>
-      <TextInput 
-        placeholder="Email Address"
+      <TextInput
         style={styles.input}
+        placeholder="Email Address"
+        placeholderTextColor="#888"
         keyboardType="email-address"
         autoCapitalize="none"
+        value={formData.email}
+        onChangeText={(text) => handleInputChange("email", text)}
       />
-      <TextInput 
+      <TextInput
         placeholder="Password"
         style={styles.input}
+        value={formData.password}
+        placeholderTextColor="#888"
+        onChangeText={(text) => handleInputChange("password", text)}
         secureTextEntry
       />
       <TouchableOpacity>
@@ -25,15 +45,15 @@ const SignInForm = () => {
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     marginBottom: 15,
     fontSize: 16,
   },
   forgotPassword: {
-    color: '#007bff',
-    textAlign: 'right',
+    color: "#007bff",
+    textAlign: "right",
     marginBottom: 20,
   },
 });

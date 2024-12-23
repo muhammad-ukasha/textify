@@ -26,7 +26,7 @@ const OtpScreen = () => {
     if (value && index < 3) {
       inputRefs.current[index + 1].focus();
     }
-  };
+  };  
 
   const handleBackspace = (index) => {
     if (index > 0 && otp[index] === "") {
@@ -36,6 +36,7 @@ const OtpScreen = () => {
 
   const handleSubmit = () => {
     alert(`Submitted OTP: ${otp.join("")}`);
+    navigation.navigate('meetingScreen');
   };
 
   return (

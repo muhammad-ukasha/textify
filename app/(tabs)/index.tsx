@@ -8,8 +8,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Signup from "../../screens/signup";
 import SignupScreen from "../../screens/SignUpScreen";
 import SignInScreen from "@/screens/signInScreen";
-import MeetingScreen from '../../screens/meetingScreen'
-import otpScreen from '../../screens/otpScreen'
+import MeetingScreen from "../../screens/meetingScreen";
+import otpScreen from "../../screens/otpScreen";
+import signup from "../../screens/signup";
+import ForgetPasswordScreen from "../../screens/forgetPasswordScreen ";
 
 const Stack = createStackNavigator();
 
@@ -18,26 +20,41 @@ const App = () => {
     //   <View style={styles.container}>
     //  <SignInScreen/>
     //   </View>
-<>
-    <Stack.Navigator initialRouteName="welcom">
-      <Stack.Screen
-        name="welcom"
-        component={otpScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="signup"
-        component={SignupScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="signin"
-        component={SignInScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator initialRouteName="welcom">
+        <Stack.Screen
+          name="welcom"
+          component={signup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="signup"
+          component={SignupScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="signin"
+          component={SignInScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="otpScreen"
+          component={otpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ForgetPasswordScreen"
+          component={ForgetPasswordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="meetingScreen"
+          component={MeetingScreen}
+          options={{ headerShown: false }}
+        />
+        
+      </Stack.Navigator>
     </>
-    
   );
 };
 const styles = StyleSheet.create({

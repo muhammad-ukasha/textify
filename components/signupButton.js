@@ -1,9 +1,9 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const   SignUpButton = () => {
+const SignUpButton = ({ onPress }) => {
   return (
-    <TouchableOpacity style={styles.button} >
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.text}>Sign Up</Text>
     </TouchableOpacity>
   );
@@ -11,15 +11,15 @@ const   SignUpButton = () => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   text: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

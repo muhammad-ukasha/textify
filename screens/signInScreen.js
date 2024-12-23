@@ -1,5 +1,15 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Keyboard,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import BackButton from "../components/backbutton";
@@ -12,26 +22,35 @@ const SignInScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
-      <BackButton onPress={() => navigation.goBack()} />
-      <Header />
-      <View style={styles.signInSection}>
-        <SignInForm />
-        <TouchableOpacity
-          onPress={() => navigation.navigate("signup")}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Sign in</Text>
-        </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View>
+            <BackButton onPress={() => navigation.goBack()} />
+            <Header />
+            <View style={styles.signInSection}>
+              <SignInForm />
+              <TouchableOpacity
+                onPress={() => navigation.navigate("signup")}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Sign in</Text>
+              </TouchableOpacity>
 
-        {/* <PrimaryButton1 title="Sign in" onPress={() => alert('Sign In Pressed')} /> */}
-        <Footer
-          title="Don't have an account?"
-          link="sign UP"
-          onPress={() => navigation.navigate("signup")}
-        />
-      </View>
-    </View>
+              {/* <PrimaryButton1 title="Sign in" onPress={() => alert('Sign In Pressed')} /> */}
+              <Footer
+                title="Don't have an account?"
+                link="sign UP"
+                onPress={() => navigation.navigate("signup")}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -55,6 +74,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
 });
 
