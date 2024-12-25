@@ -25,11 +25,11 @@ const sendEmail = async (email, otp) => {
 
 // User Registration Controller
 const registerUser = async (req, res) => {
-  const { firstname, lastname, email, password, confirmPassword } = req.body;
-  // console.log(firstname, lastname, email, password)
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
+    console.log(firstName, lastName, email, password, confirmPassword)
   try {
     // Validate input
-    if (!firstname || !lastname || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -46,16 +46,16 @@ const registerUser = async (req, res) => {
 
     // Store the user temporarily
     temporaryUsers[email] = {
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
       password,
       otp,
       createdAt: Date.now(),
     };
-    console.log(temporaryUsers)
     await sendEmail(email, otp);
-
+    
+    
     return res
       .status(200)
       .json({ message: "OTP sent to your email for verification" });
@@ -93,8 +93,8 @@ const loginUser = async (req, res) => {
       message: "User logged in successfully",
       user: {
         id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
       },
     });
@@ -104,28 +104,29 @@ const loginUser = async (req, res) => {
       .json({ message: "Server error", error: error.message });
   }
 };
-
+console.log(temporaryUsers)
 // Verify OTP and Save User
 const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
-
+    // console.log(email,otp)
   try {
     // Check if user exists in temporary storage
-    console.log(temporaryUsers[email])
+    
+    // console.log(temporaryUsers)
     const tempUser = temporaryUsers[email];
     if (!tempUser) {
       return res.status(400).json({ message: "No user found or OTP expired" });
     }
 
     // Check if OTP matches
-    if (tempUser.otp !== parseInt(otp)) {
+    if (tempUser.otp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
     // Save the user to the database
     const newUser = new User({
-      firstname: tempUser.firstname,
-      lastname: tempUser.lastname,
+      firstname: tempUser.firstName,
+      lastname: tempUser.lastName,
       email: tempUser.email,
       password: tempUser.password, // Password hashing is handled in the User model's pre-save hook
     });
@@ -133,7 +134,7 @@ const verifyOtp = async (req, res) => {
     await newUser.save();
 
     // Remove the user from temporary storage
-    delete temporaryUsers[email];
+    // delete temporaryUsers[email];
 
     return res
       .status(201)

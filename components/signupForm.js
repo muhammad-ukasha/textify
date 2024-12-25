@@ -3,18 +3,7 @@ import React, { useState } from "react";
 
 import { View, TextInput, StyleSheet, Text } from "react-native";
 
-const Form = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-  };
+const Form = ({ formData, onInputChange }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create an account</Text>
@@ -24,14 +13,14 @@ const Form = () => {
           style={[styles.input, { marginRight: 10 }]}
           placeholder="First Name"
           value={formData.firstName}
-          onChangeText={(text) => handleInputChange("firstName", text)}
+          onChangeText={(text) => onInputChange("firstName", text)}
           placeholderTextColor="#888"
         />
         <TextInput
           style={styles.input}
           placeholder="Last Name"
           value={formData.lastName}
-          onChangeText={(text) => handleInputChange("lastName", text)}
+          onChangeText={(text) => onInputChange("lastName", text)}
           placeholderTextColor="#888"
         />
       </View>
@@ -40,7 +29,7 @@ const Form = () => {
         placeholder="Email Address"
         keyboardType="email-address"
         value={formData.email}
-        onChangeText={(text) => handleInputChange("email", text)}
+        onChangeText={(text) => onInputChange("email", text)}
         placeholderTextColor="#888"
       />
       <TextInput
@@ -48,7 +37,7 @@ const Form = () => {
         placeholder="Password"
         secureTextEntry
         value={formData.password}
-        onChangeText={(text) => handleInputChange("password", text)}
+        onChangeText={(text) => onInputChange("password", text)}
         placeholderTextColor="#888"
       />
       <TextInput
@@ -56,7 +45,7 @@ const Form = () => {
         placeholder="Confirm Password"
         secureTextEntry
         value={formData.confirmPassword}
-        onChangeText={(text) => handleInputChange("confirmPassword", text)}
+        onChangeText={(text) => onInputChange("confirmPassword", text)}
         placeholderTextColor="#888"
       />
     </View>

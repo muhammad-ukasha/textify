@@ -7,15 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const SignInForm = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-  };
+const SignInForm = ({ formData, handleInputChange}) => {
   return (
     <View>
       <TextInput

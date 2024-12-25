@@ -8,12 +8,16 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import BackButton from "@/components/backbutton";
+import axiosInstance from "../api/axiosInstance";
 
 const OtpScreen = () => {
   const navigation = useNavigation();
+  // const [loading, setLoading] = useStrate(false);
 
+  const route = useRoute();
+  const { email } = route.params;
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRefs = useRef([]);
 
@@ -26,7 +30,7 @@ const OtpScreen = () => {
     if (value && index < 3) {
       inputRefs.current[index + 1].focus();
     }
-  };  
+  };
 
   const handleBackspace = (index) => {
     if (index > 0 && otp[index] === "") {
@@ -34,17 +38,55 @@ const OtpScreen = () => {
     }
   };
 
-  const handleSubmit = () => {
-    alert(`Submitted OTP: ${otp.join("")}`);
-    navigation.navigate('meetingScreen');
+  const handleSubmit = async () => {
+    // Combine the OTP array into a single string or number
+    const otpString = otp.join(""); // "123456"
+    const otpNumber = Number(otpString); // Convert to number if needed
+
+    if (!otpNumber || otpNumber.toString().length !== 4) {
+      alert("Please enter a valid 4-digit OTP.");
+      return;
+    }
+
+    try {
+      // Replace '/verify-otp' with your backend endpoint
+      // console.log(otpNumber);
+
+      const response = await axiosInstance.post("/verifyEmail", {
+        email: email,
+        otp: otpNumber,
+      });
+      if (response.status === 201) {
+        // Handle success
+        alert("OTP Verified Successfully!");
+        navigation.navigate("meetingScreen"); // Navigate to Home or Dashboard screen
+      } else {
+        alert("Invalid OTP. Please try again.");
+        setOtp(["", "", "", ""]);
+      }
+    } catch (error) {
+      // Handle errors
+      if (error.response) {
+        alert(error.response.data.message || "Failed to verify OTP.");
+      } else {
+        alert("Network error. Please try again later.");
+      }
+    } finally {
+      // setLoading(false); // Hide loader
+    }
+    // alert(`Submitted OTP: ${otp.join("")}`);
+    // navigation.navigate("meetingScreen");
   };
 
   return (
     <>
-
       <View style={styles.container}>
         {/* Back Button */}
-        <BackButton/>
+        <BackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
 
         {/* Header */}
         <Text style={styles.header}>Meeting App</Text>
@@ -90,6 +132,7 @@ const OtpScreen = () => {
           </View>
         </View>
       </View>
+      {/* <Loader visible={loading} message="Please wait..." /> */}
     </>
   );
 };

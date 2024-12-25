@@ -11,10 +11,10 @@ const MeetingCard = ({ time, title, meetingId, onTranscription, onSummary, onDel
       <Text style={styles.meetingId}>Meeting ID: {meetingId}</Text>
       <View style={styles.cardButtons}>
         <TouchableOpacity style={styles.transcriptionButton} onPress={onTranscription}>
-          <Text style={styles.buttonText}>Transcription</Text>
+          <Text style={styles.buttonText}>join</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.summaryButton} onPress={onSummary}>
-          <Text style={styles.buttonText}>Summary</Text>
+          <Text style={styles.buttonText}>dismiss</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
           <Text style={styles.buttonText}>Delete</Text>
