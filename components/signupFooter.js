@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: '#666',
+    
   },
   link: {
     color: '#007bff',

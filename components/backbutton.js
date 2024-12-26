@@ -11,12 +11,23 @@ const BackButton = ({onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
-    
+    position: 'absolute', // Makes it stick to the top-left
+    top: 10, // Adjust for safe area or status bar
+    left: 10, // Align to the left
+    zIndex: 10, // Ensure it is above other content
+    backgroundColor: '#fff', // Optional background for better visibility
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2, // Adds a subtle shadow for Android
   },
   text: {
-    color: '#007bff',
     fontSize: 16,
+    fontWeight: 'bold',
+    color: '#007bff',
   },
 });
 

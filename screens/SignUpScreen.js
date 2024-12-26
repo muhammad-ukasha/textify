@@ -33,7 +33,6 @@ const SignUpScreen = () => {
     setFormData({ ...formData, [field]: value });
   };
   const handleSignup = async () => {
-    
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -45,24 +44,24 @@ const SignUpScreen = () => {
       return;
     }
 
-    // setLoading(true); // Show loader
+    setLoading(true); // Show loader
 
     try {
       // Make POST request using Axios
-      console.log(formData)
+      console.log(formData);
       const response = await axiosInstance.post("/signup", {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        confirmPassword : formData.confirmPassword,
+        confirmPassword: formData.confirmPassword,
       });
-      console.log(response)  
+      // console.log(response)
       // Han  dle success
       if (response.status === 200) {
-        console.log('a')
+        console.log("a");
         alert("Sign Up Successful!");
-        navigation.navigate("otpScreen" , {email : formData.email} ); // Navigate to Sign In screen
+        navigation.navigate("otpScreen", { email: formData.email }); // Navigate to Sign In screen
       }
     } catch (error) {
       // Handle errors
@@ -77,7 +76,7 @@ const SignUpScreen = () => {
         alert("An error occurred. Please try again.");
       }
     } finally {
-      // setLoading(false); // Hide loader
+      setLoading(false); // Hide loader
     }
 
     // TODO: Implement signup logic here
@@ -89,9 +88,9 @@ const SignUpScreen = () => {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
+        <BackButton onPress={() => navigation.goBack()} />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.container}>
-            <BackButton onPress={() => navigation.goBack()} />
             <Header />
             <Form formData={formData} onInputChange={handleInputChange} />
             <SignUpButton onPress={handleSignup} />

@@ -9,7 +9,7 @@ import {
   ScrollView,
   Platform,
   Keyboard,
-  Alert
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -34,7 +34,7 @@ const SignInScreen = () => {
     setFormData({ ...formData, [field]: value });
   };
   const [loading, setLoading] = useState(false);
-  
+
   const handleLogin = async () => {
     if (!formData.email || !formData.email) {
       Alert.alert("Error", "Please enter both email and password.");
@@ -73,9 +73,9 @@ const SignInScreen = () => {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
+        <BackButton onPress={() => navigation.goBack()} />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View>
-            <BackButton onPress={() => navigation.goBack()} />
             <Header />
             <View style={styles.signInSection}>
               <SignInForm
@@ -87,12 +87,12 @@ const SignInScreen = () => {
               </TouchableOpacity>
 
               {/* <PrimaryButton1 title="Sign in" onPress={() => alert('Sign In Pressed')} /> */}
-              <Footer
-                title="Don't have an account?"
-                link="sign UP"
-                onPress={() => navigation.navigate("signup")}
-              />
             </View>
+            <Footer
+              title="Don't have an account?"
+              link="sign UP"
+              onPress={() => navigation.navigate("signup")}
+            />
           </View>
           <Loader visible={loading} message="Please wait..." />
         </ScrollView>

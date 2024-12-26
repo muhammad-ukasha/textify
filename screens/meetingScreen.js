@@ -1,95 +1,98 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 
-// Meeting Card Component
-const MeetingCard = ({ time, title, meetingId, onTranscription, onSummary, onDelete }) => {
-  return (
-    <View style={styles.card}>
-      <Text style={styles.meetingTime}>{time}</Text>
-      <Text style={styles.meetingTitle}>{title}</Text>
-      <Text style={styles.meetingId}>Meeting ID: {meetingId}</Text>
-      <View style={styles.cardButtons}>
-        <TouchableOpacity style={styles.transcriptionButton} onPress={onTranscription}>
-          <Text style={styles.buttonText}>join</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.summaryButton} onPress={onSummary}>
-          <Text style={styles.buttonText}>dismiss</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-// Main Meeting Screen
 const MeetingScreen = () => {
-  const meetingData = [
+  // Example meeting data
+  const meetings = [
     {
       id: '1',
-      date: 'Mon, Oct 23, 2024',
+      date: 'Mon, Jan 12 - 2025',
       time: '01:30 PM - 02:30 PM',
       title: 'Product Launch',
       meetingId: '715 3281 0157',
+      status: 'Scheduled',
     },
     {
       id: '2',
-      date: 'Wed, Oct 25, 2024',
+      date: 'Wed, Dec 25 - 2025',
       time: '08:30 AM - 09:00 AM',
       title: 'Product Update 1.0',
       meetingId: '715 3281 0158',
+      status: 'Scheduled',
+    },
+    {
+      id: '3',
+      date: 'Fri, Oct 25 - 2024',
+      time: '08:30 AM - 09:00 AM',
+      title: 'Product Update',
+      meetingId: '715 3281 0158',
+      status: 'Ended',
     },
   ];
 
-  const renderItem = ({ item }) => (
-    <View style={styles.dateSection}>
-      <Text style={styles.dateText}>{item.date}</Text>
-      <MeetingCard
-        time={item.time}
-        title={item.title}
-        meetingId={item.meetingId}
-        onTranscription={() => alert('Transcription Clicked')}
-        onSummary={() => alert('Summary Clicked')}
-        onDelete={() => alert('Meeting Deleted')}
-      />
+  const renderMeeting = (meeting) => (
+    <View key={meeting.id} style={styles.meetingCard}>
+      {/* Meeting Header */}
+      <View style={styles.header}>
+        <Text style={styles.dateText}>{meeting.date}</Text>
+        <View
+          style={[
+            styles.statusBadge,
+            meeting.status === 'Scheduled'
+              ? styles.scheduledBadge
+              : styles.endedBadge,
+          ]}
+        >
+          <Text style={styles.statusText}>{meeting.status}</Text>
+        </View>
+      </View>
+
+      {/* Meeting Details */}
+      <Text style={styles.timeText}>{meeting.time}</Text>
+      <Text style={styles.titleText}>{meeting.title}</Text>
+      <Text style={styles.meetingIdText}>Meeting ID: {meeting.meetingId}</Text>
+
+      {/* Action Buttons */}
+      <View style={styles.actions}>
+        <TouchableOpacity style={styles.joinButton}>
+          <Text style={styles.buttonText}>Join</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.detailsButton}>
+          <Text style={styles.buttonText}>Show Details</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.dismissButton}>
+          <Text style={styles.dismissButtonText}>Dismiss</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Meeting App</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity style={styles.startMeetingButton}>
-            <Text style={styles.buttonText}>Start Meeting</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.joinMeetingButton}>
-            <Text style={styles.buttonText1 } >Join a meeting</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Meeting List */}
-      <FlatList
-        data={meetingData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+      <Text style={styles.headerTitle}>All Meetings</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-      />
+      >
+        {meetings.map(renderMeeting)}
+      </ScrollView>
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Ionicons name="search" size={28} color="#999" />
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navText}>Search</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="home" size={28} color="#007bff" />
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="person" size={28} color="#999" />
+        <TouchableOpacity style={styles.navItem}>
+          <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -101,110 +104,121 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    backgroundColor: '#e6f7ff',
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#007bff',
-    marginBottom: 10,
+    color: '#000',
+    marginVertical: 20,
+    marginLeft: 20,
   },
-  headerButtons: {
+  scrollContent: {
+    paddingBottom: 100, // To account for bottom navigation
+  },
+  meetingCard: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  header: {
     flexDirection: 'row',
-    gap: 10,
-  },
-  startMeetingButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  joinMeetingButton: {
-    backgroundColor: '#fff',
-    borderColor: '#007bff',
-    color: 'blue',
-    borderWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  buttonText1: {
-    color: '#007bff',
-    fontWeight: 'bold',
-  },
-  dateSection: {
-    marginVertical: 10,
-    paddingHorizontal: 15,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   dateText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#000',
+  },
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  scheduledBadge: {
+    backgroundColor: '#007bff',
+  },
+  endedBadge: {
+    backgroundColor: '#dc3545',
+  },
+  statusText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  timeText: {
+    fontSize: 16,
+    color: '#666',
     marginBottom: 5,
   },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 15,
-    marginVertical: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  meetingTime: {
+  titleText: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 5,
+  },
+  meetingIdText: {
     fontSize: 14,
-    color: '#007bff',
-  },
-  meetingTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-  meetingId: {
     color: '#666',
-    marginVertical: 5,
+    marginBottom: 10,
   },
-  cardButtons: {
+  actions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
   },
-  transcriptionButton: {
-    backgroundColor: '#009dff',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-  },
-  summaryButton: {
+  joinButton: {
     backgroundColor: '#007bff',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
     borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
-  deleteButton: {
-    backgroundColor: '#ff4d4f',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+  detailsButton: {
+    backgroundColor: '#17a2b8',
     borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  dismissButton: {
+    backgroundColor: '#dc3545',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  dismissButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     paddingVertical: 10,
+    backgroundColor: '#f9f9f9',
     borderTopWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderTopColor: '#ddd',
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  activeNavText: {
+    color: '#007bff',
+    fontWeight: 'bold',
   },
 });
 
