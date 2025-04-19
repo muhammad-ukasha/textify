@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Transcription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 200px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .status {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+        }
+        .update-time {
+            font-size: 12px;
+            color: #888;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 24px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: red;
+        }
+        .pull-indicator {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+            display: none;
+        }
+        .pull-indicator.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Transcription</h1>
+    <div id="status" class="status disconnected">Disconnected</div>
+    
+    <div class="pull-indicator" id="pullIndicator">Pull down to refresh</div>
+    <div id="transcription" class="container">
+        <div class="loading" id="loading">Loading transcript...</div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const transcriptionDiv = document.getElementById('transcription');
+        const loadingDiv = document.getElementById('loading');
+        const pullIndicator = document.getElementById('pullIndicator');
+        
+        let lastUpdated = null;
+        let isDragging = false;
+        let startY = 0;
+        let currentY = 0;
+        
+        // Get the WebSocket URL based on the current host
+        const wsUrl = `ws://${window.location.hostname}:3000/transcription`;
+        const ws = new WebSocket(wsUrl);
+
+        // Handle pull-to-refresh
+        document.addEventListener('mousedown', (e) => {
+            if (window.scrollY === 0) {
+                isDragging = true;
+                startY = e.clientY;
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            currentY = e.clientY;
+            const diff = currentY - startY;
+            
+            if (diff > 0) {
+                pullIndicator.classList.add('show');
+                pullIndicator.style.transform = `translateY(${diff}px)`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                pullIndicator.classList.remove('show');
+                pullIndicator.style.transform = '';
+                
+                if (currentY - startY > 50) {
+                    // Trigger refresh
+                    fetchLatestTranscript();
+                }
+            }
+        });
+
+        // Function to fetch latest transcript
+        async function fetchLatestTranscript() {
+            loadingDiv.style.display = 'block';
+            try {
+                const response = await fetch('http://localhost:3000/latest-transcript');
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.latest_transcript) {
+                    updateTranscription(data.latest_transcript);
+                }
+            } catch (error) {
+                console.error('Error fetching transcript:', error);
+                showError('Failed to fetch transcript. Pull down to refresh.');
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        // Function to update transcription display
+        function updateTranscription(transcript) {
+            const now = new Date();
+            lastUpdated = now;
+            
+            transcriptionDiv.innerHTML = `
+                <div class="header">
+                    <div class="timestamp">
+                        Last modified: ${new Date(transcript.last_modified).toLocaleString()}
+                    </div>
+                    <div class="update-time">
+                        Last checked: ${now.toLocaleTimeString()}
+                    </div>
+                </div>
+                <div class="content">${transcript.content}</div>
+            `;
+        }
+
+        // Function to show error
+        function showError(message) {
+            transcriptionDiv.innerHTML = `
+                <div class="error">
+                    ${message}
+                </div>
+            `;
+        }
+
+        ws.onopen = () => {
+            statusDiv.textContent = 'Connected';
+            statusDiv.className = 'status connected';
+            fetchLatestTranscript();
+        };
+
+        ws.onclose = () => {
+            statusDiv.textContent = 'Disconnected';
+            statusDiv.className = 'status disconnected';
+            // Try to reconnect after 5 seconds
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'transcription') {
+                updateTranscription({ content: data.text, last_modified: new Date() });
+            }
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            statusDiv.textContent = 'Error: ' + error.message;
+            statusDiv.className = 'status disconnected';
+        };
+
+        // Set up polling for updates
+        setInterval(fetchLatestTranscript, 30000); // Poll every 30 seconds
+    </script>
+</body>
+</html> 

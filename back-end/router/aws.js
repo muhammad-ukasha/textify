@@ -1,7 +1,8 @@
-const express = require("express");
+const express = require ("express");
 const router = express.Router();
-const awsTranscriptController = require("../controller/awsTranscriptController.js");
+// const awsTranscriptController = require("../controller/awsTranscriptController.js");
+const presign = require("../controller/presignurlcontroller");
 
-router.get("/transcription/:fileName", awsTranscriptController.transcripts);
+router.get("/presigned-url", presign.presignUrl);
 
 module.exports = router;

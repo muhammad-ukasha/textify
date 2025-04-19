@@ -9,9 +9,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileHeader from "../components/ProfileHeader"; // Import ProfileHeader component
 import UserInfo from "../components/UserInfo"; // Import UserInfo component
+import { useNavigation } from "@react-navigation/native";
 
 const ProfilePage = ({ onEditPress, onLogoutPress }) => {
   const [user, setUser] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -48,7 +50,9 @@ const ProfilePage = ({ onEditPress, onLogoutPress }) => {
       <UserInfo email={user.email} password={user.password} />
 
       {/* Logout Button */}
-      <TouchableOpacity onPress={onLogoutPress} style={styles.logoutButton}>
+      <TouchableOpacity onPress={()=>{
+        navigation.navigate('welcom')
+      }} style={styles.logoutButton}>
         <Text style={styles.logoutText}>Logout</Text>
         {/* Data{" "} */}
       </TouchableOpacity>

@@ -5,28 +5,33 @@ let temporaryUsers = {}; // Temporary storage for unverified users
 
 // Send Email Function
 const sendEmail = async (email, otp) => {
-  const transporter = nodemailer.createTransport({
-    service: "Gmail", // Use your email provider
-    auth: {
-      user: process.env.EMAIL, // Your email
-      pass: process.env.EMAIL_PASSWORD, // Your email password
-    },
-  });
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
-  const mailOptions = {
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Verify Your Email",
-    text: `Your OTP for email verification is: ${otp}`,
-  };
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Verify Your Email",
+      text: `Your OTP for email verification is: ${otp}`,
+    };
 
-  await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
 };
 
 // User Registration Controller
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
-    console.log(firstName, lastName, email, password, confirmPassword)
+  console.log(firstName, lastName, email, password, confirmPassword);
   try {
     // Validate input
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -54,8 +59,8 @@ const registerUser = async (req, res) => {
       createdAt: Date.now(),
     };
     await sendEmail(email, otp);
-    
-    
+    console.log(otp);
+
     return res
       .status(200)
       .json({ message: "OTP sent to your email for verification" });
@@ -105,14 +110,14 @@ const loginUser = async (req, res) => {
       .json({ message: "Server error", error: error.message });
   }
 };
-console.log(temporaryUsers)
+console.log(temporaryUsers);
 // Verify OTP and Save User
 const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
-    // console.log(email,otp)
+  // console.log(email,otp)
   try {
     // Check if user exists in temporary storage
-    
+
     // console.log(temporaryUsers)
     const tempUser = temporaryUsers[email];
     if (!tempUser) {
@@ -137,12 +142,10 @@ const verifyOtp = async (req, res) => {
     // Remove the user from temporary storage
     // delete temporaryUsers[email];
 
-    return res
-      .status(201)
-      .json({
-        message: "Email verified and user registered successfully",
-        user: newUser,
-      });
+    return res.status(201).json({
+      message: "Email verified and user registered successfully",
+      user: newUser,
+    });
   } catch (error) {
     return res
       .status(500)

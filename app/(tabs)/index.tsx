@@ -15,7 +15,9 @@ import ForgetPasswordScreen from "../../screens/forgetPasswordScreen ";
 import MainMeetingScreen from "../../screens/MainMeetingScreen";
 import TranscriptPage from "../../screens/TranscriptPage";
 import MeetingTabs from "../../screens/MeetingTabs";
-
+import DemoAudioScreen from "../../screens/demoScreen";
+import RecordingScreen from "../../screens/RecordingScreen";
+import MeetingDetailsModal from '../../components/MeetingDetailsModal.js'; 
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -65,11 +67,28 @@ const App = () => {
           component={MainMeetingScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="TranscriptPage"
           component={TranscriptPage}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="DemoAudioScreen"
+          component={DemoAudioScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RecordingScreen"
+          component={RecordingScreen}
+          options={{ headerShown: false }}
+        />
+        {/* <Stack.Screen
+          name="MeetingDetails"
+          component={MeetingDetails}
+          options={{ headerShown: false }}
+        /> */}
+        
       </Stack.Navigator>
     </>
   );
