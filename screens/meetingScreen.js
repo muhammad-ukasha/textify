@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import InstantMeetingScreen from "./InstantMeetingScreen";
 
 const MeetingScreen = () => {
   const navigation = useNavigation();
@@ -19,17 +20,6 @@ const MeetingScreen = () => {
       date: "Mon, Jan 12 - 2025",
       time: "01:30 PM – 02:30 PM",
       meetingId: "715 3281 0157",
-      organizer: "Rayyan Khan",
-      subject: "To understand the scrum concept",
-      when: "Thu, 2024-12-26 2 PM – 2 PM (PST)",
-      description:
-        "To understand and clear the concept which is covered in class",
-      participants: [
-        "Taha Mallick",
-        "M. Okasha",
-        "Anas Nasir",
-        "Areeb Bin Zubair",
-      ],
     },
     {
       id: "2",
@@ -37,17 +27,12 @@ const MeetingScreen = () => {
       date: "Wed, Dec 25 – 2025",
       time: "08:30 AM – 09:00 AM",
       meetingId: "715 3281 0158",
-      organizer: "Sarah Lee",
-      subject: "Product features discussion",
-      when: "Wed, 2025-12-25 8:30 AM – 9:00 AM (PST)",
-      description:
-        "Discussing the new features in the upcoming product release.",
-      participants: ["John Doe", "Jane Smith", "Emily Davis"],
     },
   ]);
 
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [chooseOptionModal, setChooseOptionModal] = useState(false); // Popup modal state
 
   const openDetails = (meeting) => {
     setSelectedMeeting(meeting);
@@ -66,6 +51,22 @@ const MeetingScreen = () => {
     if (selectedMeeting && selectedMeeting.id === meetingId) {
       closeDetails();
     }
+  };
+
+  const handleStartMeeting = () => {
+    setChooseOptionModal(true); // Show the option modal when Start Meeting is clicked
+  };
+
+  const handleInstantMeeting = () => {
+    navigation.navigate("InstantMeetingScreen");
+    setChooseOptionModal(false);
+    console.log("Instant Meeting");
+  };
+
+  const handleScheduleMeeting = () => {
+    navigation.navigate("ScheduleMeetingScreen"); // This navigates to the ScheduleMeetingScreen
+    setChooseOptionModal(false);
+    console.log("Schedule Meeting");
   };
 
   const renderMeetingItem = ({ item }) => (
@@ -98,6 +99,28 @@ const MeetingScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Meeting App</Text>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity
+            style={[styles.headerBtn, styles.headerBtnFilled]}
+            onPress={handleStartMeeting} // Trigger the option modal when Start Meeting is clicked
+          >
+            <Text style={[styles.headerBtnText, styles.headerBtnTextLight]}>
+              Start Meeting
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.headerBtn, styles.headerBtnOutline]}
+            onPress={() => navigation.navigate("JoinMeetingScreen")}
+          >
+            <Text style={[styles.headerBtnText, styles.headerBtnPrimary]}>
+              Join a Meeting
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <Text style={styles.screenHeading}>Meetings</Text>
       <FlatList
         data={meetings}
@@ -115,10 +138,7 @@ const MeetingScreen = () => {
       >
         <View style={styles.overlay}>
           <View style={styles.popupBox}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={closeDetails}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={closeDetails}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>✕</Text>
             </TouchableOpacity>
 
@@ -148,6 +168,32 @@ const MeetingScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Choose Option Popup */}
+      <Modal
+        visible={chooseOptionModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setChooseOptionModal(false)}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.popupBox}>
+            <Text style={styles.popupTitle}>Choose your option</Text>
+            <TouchableOpacity
+              style={[styles.optionButton, styles.optionButtonFilled]}
+              onPress={handleInstantMeeting}
+            >
+              <Text style={styles.optionButtonText}>Instant Meeting</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.optionButton, styles.optionButtonFilled]} // Updated style here for blue color
+              onPress={handleScheduleMeeting}
+            >
+              <Text style={styles.optionButtonText}>Schedule Meeting</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -160,6 +206,50 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingTop: 40,
     paddingHorizontal: 20,
+  },
+  header: {
+    backgroundColor: "#FAFAFA", // white color for the top curve
+    paddingTop: 40,
+    paddingBottom: 24,
+    paddingHorizontal: 16,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    marginBottom: 20,
+  },
+  headerTitle: {
+    color: "#007AFF", // blue color for header text
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  headerButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  headerBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    marginHorizontal: 8,
+  },
+  headerBtnFilled: {
+    backgroundColor: "#007AFF", // Start Meeting button background (blue)
+  },
+  headerBtnOutline: {
+    borderWidth: 1.5,
+    borderColor: "#007AFF", // Join Meeting button border (blue)
+    backgroundColor: "transparent",
+  },
+  headerBtnText: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  headerBtnTextLight: {
+    color: "#fff",
+  },
+  headerBtnPrimary: {
+    color: "#007AFF", // Join Meeting button text
   },
   screenHeading: {
     fontSize: 24,
@@ -194,17 +284,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   joinButton: {
-    backgroundColor: "#4caf50",
+    backgroundColor: "#007AFF", // Blue button for Join
     padding: 10,
     borderRadius: 5,
   },
   detailsButton: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#2196f3", // Blue button for Show Details
     padding: 10,
     borderRadius: 5,
   },
   dismissButton: {
-    backgroundColor: "#f44336",
+    backgroundColor: "#f44336", // Red button for Dismiss
     padding: 10,
     borderRadius: 5,
   },
@@ -212,7 +302,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
   },
-
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.3)",
@@ -249,5 +338,30 @@ const styles = StyleSheet.create({
   value: {
     fontWeight: "normal",
     fontSize: 14,
+  },
+  popupTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  optionButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    marginVertical: 8,
+  },
+  optionButtonFilled: {
+    backgroundColor: "#007AFF", // Blue button background for both options
+  },
+  optionButtonOutline: {
+    borderWidth: 1.5,
+    borderColor: "#007AFF",
+    backgroundColor: "transparent",
+  },
+  optionButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
