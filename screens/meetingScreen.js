@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+import InstantMeetingScreen from "./InstantMeetingScreen";
 
 const MeetingScreen = () => {
   const navigation = useNavigation();
@@ -57,14 +58,14 @@ const MeetingScreen = () => {
   };
 
   const handleInstantMeeting = () => {
+    navigation.navigate("InstantMeetingScreen");
     setChooseOptionModal(false);
-    // Handle Instant Meeting logic here (e.g., navigate to a meeting screen)
     console.log("Instant Meeting");
   };
 
   const handleScheduleMeeting = () => {
+    navigation.navigate("ScheduleMeetingScreen"); // This navigates to the ScheduleMeetingScreen
     setChooseOptionModal(false);
-    // Handle Schedule Meeting logic here (e.g., navigate to scheduling screen)
     console.log("Schedule Meeting");
   };
 
@@ -137,10 +138,7 @@ const MeetingScreen = () => {
       >
         <View style={styles.overlay}>
           <View style={styles.popupBox}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={closeDetails}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={closeDetails}>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>✕</Text>
             </TouchableOpacity>
 
@@ -188,7 +186,7 @@ const MeetingScreen = () => {
               <Text style={styles.optionButtonText}>Instant Meeting</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.optionButton, styles.optionButtonOutline]}
+              style={[styles.optionButton, styles.optionButtonFilled]} // Updated style here for blue color
               onPress={handleScheduleMeeting}
             >
               <Text style={styles.optionButtonText}>Schedule Meeting</Text>
@@ -354,7 +352,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   optionButtonFilled: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#007AFF", // Blue button background for both options
   },
   optionButtonOutline: {
     borderWidth: 1.5,
@@ -367,4 +365,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

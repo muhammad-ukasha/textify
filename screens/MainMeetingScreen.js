@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+
 import {
   View,
   Text,
@@ -176,3 +178,110 @@ const styles = StyleSheet.create({
 });
 
 export default MeetingScreen;
+
+
+// import React, { useState, useEffect } from "react";
+// import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+// import { useRoute } from "@react-navigation/native"; // Use useRoute to get params
+// import { useNavigation } from "@react-navigation/native"; // To navigate or go back
+
+// const MainMeetingScreen = () => {
+//   const route = useRoute();
+//   const navigation = useNavigation();
+//   const { meetingCode } = route.params; // Get the meetingCode from the params
+
+//   const [isRecording, setIsRecording] = useState(false);
+
+//   // Start or stop recording
+//   const handleToggleRecording = () => {
+//     setIsRecording(!isRecording);
+//     console.log(isRecording ? "Stopping recording..." : "Starting recording...");
+//   };
+
+//   const handleEndMeeting = () => {
+//     console.log(`Ending meeting with code: ${meetingCode}`);
+//     // Navigate to the meeting list or another screen when the meeting ends
+//     navigation.navigate("meetingScreen");
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Main Meeting Screen</Text>
+//       <Text style={styles.subtitle}>Meeting Code: {meetingCode}</Text>
+
+//       {/* Placeholder for meeting content */}
+//       <View style={styles.meetingContent}>
+//         <Text style={styles.meetingContentText}>This is where the meeting content will be displayed.</Text>
+//       </View>
+
+//       {/* Controls */}
+//       <TouchableOpacity style={styles.recordButton} onPress={handleToggleRecording}>
+//         <Text style={styles.recordButtonText}>{isRecording ? "Stop Recording" : "Start Recording"}</Text>
+//       </TouchableOpacity>
+
+//       <TouchableOpacity style={styles.endButton} onPress={handleEndMeeting}>
+//         <Text style={styles.endButtonText}>End Meeting</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#fff",
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     color: "#007AFF",
+//   },
+//   subtitle: {
+//     fontSize: 18,
+//     color: "#333",
+//     marginTop: 10,
+//   },
+//   meetingContent: {
+//     width: "80%",
+//     height: 200,
+//     backgroundColor: "#f0f8ff",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     marginTop: 30,
+//     borderRadius: 10,
+//   },
+//   meetingContentText: {
+//     fontSize: 18,
+//     color: "#333",
+//   },
+//   recordButton: {
+//     marginTop: 30,
+//     backgroundColor: "#007AFF",
+//     paddingVertical: 12,
+//     paddingHorizontal: 40,
+//     borderRadius: 6,
+//     alignItems: "center",
+//   },
+//   recordButtonText: {
+//     color: "#fff",
+//     fontSize: 18,
+//     fontWeight: "bold",
+//   },
+//   endButton: {
+//     marginTop: 20,
+//     backgroundColor: "#f44336",
+//     paddingVertical: 12,
+//     paddingHorizontal: 40,
+//     borderRadius: 6,
+//     alignItems: "center",
+//   },
+//   endButtonText: {
+//     color: "#fff",
+//     fontSize: 18,
+//     fontWeight: "bold",
+//   },
+// });
+
+// export default MainMeetingScreen;

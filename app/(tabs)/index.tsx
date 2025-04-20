@@ -1,10 +1,9 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-
-import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+
+// Import screens
 import Signup from "../../screens/signup";
 import SignupScreen from "../../screens/SignUpScreen";
 import SignInScreen from "@/screens/signInScreen";
@@ -17,82 +16,86 @@ import TranscriptPage from "../../screens/TranscriptPage";
 import MeetingTabs from "../../screens/MeetingTabs";
 import DemoAudioScreen from "../../screens/demoScreen";
 import RecordingScreen from "../../screens/RecordingScreen";
-import MeetingDetailsModal from '../../components/MeetingDetailsModal.js'; 
+import InstantMeetingScreen from "../../screens/InstantMeetingScreen"; // Import InstantMeetingScreen
+import ScheduleMeetingScreen from "../../screens/ScheduleMeetingScreen";
+import JoinMeetingScreen from "../../screens/JoinMeetingScreen";
+
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    //   <View style={styles.container}>
-    //  <SignInScreen/>
-    //   </View>
-    <>
-      <Stack.Navigator initialRouteName="welcom">
-        <Stack.Screen
-          name="welcom"
-          component={signup}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="signup"
-          component={SignupScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="signin"
-          component={SignInScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="otpScreen"
-          component={otpScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ForgetPasswordScreen"
-          component={ForgetPasswordScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="meetingScreen"
-          component={MeetingTabs}
-          options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen
-          name="MeetingTabs"
-          component={MeetingTabs}
-          options={{ headerShown: false }}
-        /> */}
-        <Stack.Screen
-          name="MainMeetingScreen"
-          component={MainMeetingScreen}
-          options={{ headerShown: false }}
-        />
+    <Stack.Navigator initialRouteName="welcom">
+      <Stack.Screen
+        name="welcom"
+        component={signup}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="signup"
+        component={SignupScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="signin"
+        component={SignInScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="otpScreen"
+        component={otpScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ForgetPasswordScreen"
+        component={ForgetPasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="meetingScreen"
+        component={MeetingTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MainMeetingScreen"
+        component={MainMeetingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TranscriptPage"
+        component={TranscriptPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DemoAudioScreen"
+        component={DemoAudioScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="RecordingScreen"
+        component={RecordingScreen}
+        options={{ headerShown: false }}
+      />
+      {/* Add InstantMeetingScreen here */}
+      <Stack.Screen
+        name="InstantMeetingScreen"
+        component={InstantMeetingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ScheduleMeetingScreen"
+        component={ScheduleMeetingScreen}
+        options={{ headerShown: false }} // Added the closing tag for ScheduleMeetingScreen
+      />
+      <Stack.Screen
+        name="JoinMeetingScreen"
+        component={JoinMeetingScreen}
+        options={{ headerShown: false }}
+      />
 
-        <Stack.Screen
-          name="TranscriptPage"
-          component={TranscriptPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="DemoAudioScreen"
-          component={DemoAudioScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="RecordingScreen"
-          component={RecordingScreen}
-          options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen
-          name="MeetingDetails"
-          component={MeetingDetails}
-          options={{ headerShown: false }}
-        /> */}
-        
-      </Stack.Navigator>
-    </>
+    </Stack.Navigator>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

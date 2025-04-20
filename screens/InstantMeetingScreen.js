@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 
-const InstantMeetingScreen = () => {
+const InstantMeetingScreen = ({ navigation }) => { // Ensure `navigation` prop is passed here
   const [meetingName, setMeetingName] = useState("");
   const [meetingSubject, setMeetingSubject] = useState("");
   const [participants, setParticipants] = useState([]);
@@ -23,7 +23,10 @@ const InstantMeetingScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => { /* Handle back navigation */ }}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()} // Use navigation.goBack() to go back to the previous screen
+        >
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Meeting App</Text>
@@ -82,8 +85,6 @@ const InstantMeetingScreen = () => {
     </ScrollView>
   );
 };
-
-export default InstantMeetingScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -173,3 +174,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export default InstantMeetingScreen;
