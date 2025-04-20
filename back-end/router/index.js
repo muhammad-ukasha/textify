@@ -6,11 +6,12 @@ const signUpUser = require('./user')
 const dotenv = require('dotenv');
 const  awsUrl = require('./aws') 
 const aurdino = require('./aurdino')
+const meeting = require('./meeting')
 dotenv.config();
 
 const api = process.env.API
 router.use(api, signUpUser);
 router.use(api, awsUrl);
-// router.use(api, aurdino);
+router.use(api, meeting);
 
 module.exports = router;

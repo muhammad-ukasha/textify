@@ -1,5 +1,7 @@
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native"; // Optional: reload on focus
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -9,26 +11,60 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import InstantMeetingScreen from "./InstantMeetingScreen";
+// import InstantMeetingScreen from "./InstantMeetingScreen";
+import axiosInstance from "../api/axiosInstance";
 
 const MeetingScreen = () => {
+  const dummyMeetings = [
+    {
+      _id: "dummy-1",
+      title: "Demo Meeting",
+      date: "Mon, Jan 1 - 2025",
+      time: "10:00 AM – 11:00 AM",
+      meetingId: "000 111 222",
+      organizer: "Demo User",
+      subject: "Demo Subject",
+      description: "This is a dummy meeting loaded due to error.",
+      participants: [
+        { id: "p1", email: "john@example.com" },
+        { id: "p2", email: "jane@example.com" },
+      ],
+    },
+  ];
+  
   const navigation = useNavigation();
-  const [meetings, setMeetings] = useState([
-    {
-      id: "1",
-      title: "Final Milestone",
-      date: "Mon, Jan 12 - 2025",
-      time: "01:30 PM – 02:30 PM",
-      meetingId: "715 3281 0157",
-    },
-    {
-      id: "2",
-      title: "Product Update 1.0",
-      date: "Wed, Dec 25 – 2025",
-      time: "08:30 AM – 09:00 AM",
-      meetingId: "715 3281 0158",
-    },
-  ]);
+  const [userEmail, setUserEmail] = useState("");
+  const [allMeetings, setAllMeetings] = useState([]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchMeetings = async () => {
+        try {
+          const storedUser = await AsyncStorage.getItem("userData");
+          const parsedUser = JSON.parse(storedUser);
+          const email = parsedUser?.email;
+          setUserEmail(email);
+
+          const res = await axiosInstance.get("/list-meeting");
+          const meetingsFromServer = res.data;
+          console.log(res.data);
+          // Filter meetings where user is a participant
+          // const userMeetings = meetingsFromServer.filter(
+          //   (meeting) =>
+          //     meeting.organizer === email ||
+          //     meeting.participants.some((p) => p.email === email)
+          // );
+
+          setAllMeetings(meetingsFromServer)
+        } catch (error) {
+          setAllMeetings(dummyMeetings);
+          console.error("Error fetching meetings:", error.message);
+
+        }
+      };
+
+      fetchMeetings();
+    }, [])
+  );
 
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,7 +81,7 @@ const MeetingScreen = () => {
   };
 
   const dismissMeeting = (meetingId) => {
-    setMeetings((prevMeetings) =>
+    setAllMeetings((prevMeetings) =>
       prevMeetings.filter((meeting) => meeting.id !== meetingId)
     );
     if (selectedMeeting && selectedMeeting.id === meetingId) {
@@ -76,7 +112,9 @@ const MeetingScreen = () => {
       <Text style={styles.meetingId}>Meeting ID: {item.meetingId}</Text>
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("MainMeetingScreen")}
+          onPress={() =>
+            navigation.navigate("MainMeetingScreen", { meeting: item })
+          }
           style={styles.joinButton}
         >
           <Text style={styles.buttonText}>Join</Text>
@@ -123,7 +161,7 @@ const MeetingScreen = () => {
 
       <Text style={styles.screenHeading}>Meetings</Text>
       <FlatList
-        data={meetings}
+        data={allMeetings}
         keyExtractor={(item) => item.id}
         renderItem={renderMeetingItem}
         contentContainerStyle={styles.listContent}
@@ -160,9 +198,9 @@ const MeetingScreen = () => {
               <Text style={styles.value}>{selectedMeeting?.description}</Text>
             </Text>
             <Text style={styles.label}>Participants:</Text>
-            {selectedMeeting?.participants.map((name, index) => (
+            {selectedMeeting?.participants.map((p, index) => (
               <Text key={index} style={styles.value}>
-                • {name}
+                • {p.name} ({p.email})
               </Text>
             ))}
           </View>

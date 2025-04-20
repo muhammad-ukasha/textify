@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-
 import {
   View,
   Text,
@@ -12,13 +11,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Loader from "../components/loader"; // Adjust the path as necessary
+import { useRoute } from "@react-navigation/native";
 
 const MeetingScreen = () => {
+  const route = useRoute();
+  const { meeting } = route.params;
+  // console.log(meeting);
   const [showInfo, setShowInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [recordingStatus, setRecordingStatus] = useState("");
   const navigation = useNavigation();
-  const ESP32_IP = "192.168.49.227";
+  const ESP32_IP = "192.168.1.162";
   const startRecording = async () => {
     setLoading(true); // Show loader
     try {
@@ -28,7 +31,6 @@ const MeetingScreen = () => {
     } catch (error) {
       console.error("Error starting recording:", error);
       setRecordingStatus("Error starting recording");
-
     } finally {
       setLoading(false); // Hide loader
     }
@@ -39,12 +41,11 @@ const MeetingScreen = () => {
     try {
       const response = await axios.get(`http://${ESP32_IP}/stop`);
       console.log("Recording stopped:", response.data);
-      setRecordingStatus('Recording stopped')
+      setRecordingStatus("Recording stopped");
       navigation.navigate("meetingScreen");
     } catch (error) {
       console.error("Error stopping recording:", error);
-      setRecordingStatus('Error stopping recording')
-
+      setRecordingStatus("Error stopping recording");
     } finally {
       setLoading(false); // Hide loader
     }
@@ -63,22 +64,28 @@ const MeetingScreen = () => {
         </View>
       )}
       {/* Header */}
-      <Text style={styles.title}>Product Launch</Text>
+      {/* <Text style={styles.title}>{meeting.title}</Text>
+      <ScrollView contentContainerStyle={styles.boxContainer}>
+        <View style={styles.participantBox}>
+          <Text>{meeting.organizer} (Host)</Text>
+        </View>
+        {meeting.participants.map((p, i) => (
+          <View key={i} style={styles.participantBox}>
+            <Text>{p.name}</Text>
+          </View>
+        ))}
+      </ScrollView> */}
 
       {/* Participant Boxes */}
       <ScrollView contentContainerStyle={styles.boxContainer}>
-        <View style={styles.participantBox}>
-          <Text>Exodus (Host)</Text>
-        </View>
-        <View style={styles.participantBox}>
-          <Text>Areeb</Text>
-        </View>
-        <View style={styles.participantBox}>
-          <Text>Asim</Text>
-        </View>
-        <View style={styles.participantBox}>
-          <Text>Anas (You)</Text>
-        </View>
+          <View style={styles.participantBox}>
+            <Text>{meeting.organizer} (Host)</Text>
+          </View>
+        {meeting.participants.map((p, i) => (
+          <View key={i} style={styles.participantBox}>
+            <Text>{p.email}</Text>
+          </View>
+        ))}
       </ScrollView>
       {/* Recording Status */}
       <View style={styles.statusBox}>
@@ -92,7 +99,7 @@ const MeetingScreen = () => {
         <TouchableOpacity onPress={handleTranscriptPage}>
           <Ionicons name="copy" size={28} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=> navigation.navigate("TranscriptPage")}>
+        <TouchableOpacity onPress={() => navigation.navigate("TranscriptPage")}>
           <Ionicons name="document-text" size={28} color="black" />
         </TouchableOpacity>
 
@@ -106,8 +113,7 @@ const MeetingScreen = () => {
       {showInfo && (
         <View style={styles.infoBox}>
           <Text style={styles.infoText}>
-            This is a Product Launch meeting. Exodus is the host. You are
-            currently viewing the participant list.
+            This is a {meeting.title} meeting. {meeting.organizer} is the host.
           </Text>
         </View>
       )}
@@ -178,7 +184,6 @@ const styles = StyleSheet.create({
 });
 
 export default MeetingScreen;
-
 
 // import React, { useState, useEffect } from "react";
 // import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
