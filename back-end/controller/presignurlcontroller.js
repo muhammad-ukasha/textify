@@ -9,14 +9,14 @@ const s3 = new AWS.S3({
 const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 const presignUrl = async (req, res) => {
   const { filename } = req.query;
-
+  // console.log(req)
   if (!filename) {
     return res.status(400).json({ error: "Missing 'filename' query param." });
   }
 
   const params = {
     Bucket: BUCKET_NAME,
-    Key: `meetings/${filename}`,
+    Key: filename,
     ContentType: "audio/wav",
     Expires: 300, // 5 minutes
   };

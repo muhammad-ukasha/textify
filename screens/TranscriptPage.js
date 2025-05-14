@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 
-const API_URL = "https://dc42-43-246-221-116.ngrok-free.app";
+const API_URL = "https://de56-223-123-113-91.ngrok-free.app";
 const POLL_INTERVAL = 30000;
 
 const TranscriptScreen = () => {
@@ -33,6 +33,7 @@ const TranscriptScreen = () => {
       });
 
       const listData = listResponse.data;
+      console.log(listData);
 
       if (listData.status === "success" && listData.transcripts) {
         const sortedTranscripts = listData.transcripts.sort(
@@ -65,6 +66,8 @@ const TranscriptScreen = () => {
                 error: null,
               };
             } catch (err) {
+              // Handle error if the transcript cannot be loaded
+              console.error("Error fetching content:", err);
               return {
                 key: t.key,
                 content: ["Error loading content"],
@@ -81,11 +84,17 @@ const TranscriptScreen = () => {
         setError("Unexpected response format from the server.");
       }
     } catch (err) {
-      if (!navigator.onLine) {
-        setError("No internet connection. Please check your network.");
+      // Improved error handling to identify specific issues
+      if (err.message.includes("Network Error")) {
+        setError("Network error: Please check your internet connection.");
       } else if (err.response) {
+        // Server-side error (e.g., 404 or 500)
         setError(`Server error: ${err.response.status}`);
+      } else if (err.request) {
+        // Request was made but no response was received
+        setError("No response received from server.");
       } else {
+        // General error
         setError(`Failed to fetch transcripts: ${err.message}`);
       }
     } finally {
@@ -146,14 +155,24 @@ const TranscriptScreen = () => {
               </Text>
             )}
             {transcripts.map((transcript, index) => (
-              <View key={transcript.key || index} style={styles.transcriptContainer}>
-                {transcript.content.map((line, idx) => (
-                  <Text key={idx} style={styles.contentText}>
-                    {typeof line === "string"
-                      ? line
-                      : `[${line.time}] ${line.speaker}: ${line.text}`}
-                  </Text>
-                ))}
+              <View
+                key={transcript.key || index}
+                style={styles.transcriptContainer}
+              >
+                {transcript.content.map((line, idx) => {
+                  // Ensure line.time exists, else fallback to a default or empty string
+                  const timeStamp = line.time
+                    ? new Date(line.time).toLocaleTimeString() // Format timestamp
+                    : "";
+
+                  return (
+                    <Text key={idx} style={styles.contentText}>
+                      {timeStamp && `[${timeStamp}] `}
+                      {line.speaker ? `${line.speaker}: ` : ""}
+                      {typeof line === "string" ? line : line.text}
+                    </Text>
+                  );
+                })}
               </View>
             ))}
           </>
@@ -168,7 +187,6 @@ const TranscriptScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     padding: 16,
   },
   backButton: {
@@ -186,7 +204,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   transcriptContainer: {
-    // backgroundColor: "#f5f5f5",
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,

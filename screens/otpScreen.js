@@ -59,7 +59,7 @@ const OtpScreen = () => {
       if (response.status === 201) {
         // Handle success
         alert("OTP Verified Successfully!");
-        navigation.navigate("DemoAudioScreen"); // Navigate to Home or Dashboard screen
+        navigation.navigate("meetingScreen"); // Navigate to Home or Dashboard screen
       } else {
         alert("Invalid OTP. Please try again.");
         setOtp(["", "", "", ""]);

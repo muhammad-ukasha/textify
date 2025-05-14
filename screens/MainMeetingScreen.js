@@ -21,7 +21,7 @@ const MeetingScreen = () => {
   const [loading, setLoading] = useState(false);
   const [recordingStatus, setRecordingStatus] = useState("");
   const navigation = useNavigation();
-  const ESP32_IP = "192.168.1.162";
+  const ESP32_IP = "192.168.1.202";
   const startRecording = async () => {
     setLoading(true); // Show loader
     try {

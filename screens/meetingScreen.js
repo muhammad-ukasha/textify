@@ -48,13 +48,13 @@ const MeetingScreen = () => {
           const meetingsFromServer = res.data;
           console.log(res.data);
           // Filter meetings where user is a participant
-          // const userMeetings = meetingsFromServer.filter(
-          //   (meeting) =>
-          //     meeting.organizer === email ||
-          //     meeting.participants.some((p) => p.email === email)
-          // );
+          const userMeetings = meetingsFromServer.filter(
+            (meeting) =>
+              meeting.organizer === email ||
+              meeting.participants.some((p) => p.email === email)
+          );
 
-          setAllMeetings(meetingsFromServer)
+          setAllMeetings(userMeetings)
         } catch (error) {
           setAllMeetings(dummyMeetings);
           console.error("Error fetching meetings:", error.message);

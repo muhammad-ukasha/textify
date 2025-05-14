@@ -9,7 +9,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+// import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -141,8 +141,8 @@ const ScheduleMeetingScreen = () => {
 
       <ScrollView contentContainerStyle={styles.form}>
         <TextInput
-          style={styles.input}
           placeholder="Meeting Name"
+          style={styles.input}
           value={meetingName}
           onChangeText={setMeetingName}
         />
@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 15,
+    color: "gray"
   },
   label: { fontWeight: "600", marginBottom: 8 },
   row: {

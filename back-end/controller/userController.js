@@ -152,4 +152,78 @@ const verifyOtp = async (req, res) => {
       .json({ message: "Server error", error: error.message });
   }
 };
-module.exports = { registerUser, loginUser, verifyOtp };
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // omit password
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+// New: Get one user by ID
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(`Error fetching user ${id}:`, err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// New: Update user
+const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, email, password } = req.body;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update fields if provided
+    if (firstName) user.firstname = firstName;
+    if (lastName) user.lastname = lastName;
+    if (email) user.email = email;
+    if (password) user.password = password; // your model pre-save hook will hash
+
+    await user.save();
+    const safe = user.toObject();
+    delete safe.password;
+    res.status(200).json({ message: "User updated", user: safe });
+  } catch (err) {
+    console.error(`Error updating user ${id}:`, err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// New: Delete user
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    console.error(`Error deleting user ${id}:`, err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  verifyOtp,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+};
+
