@@ -59,8 +59,6 @@ const SignUpScreen = () => {
       // console.log(response)
       // Han  dle success
       if (response.status === 200) {
-        console.log("a");
-        alert("Sign Up Successful!");
         navigation.navigate("otpScreen", { email: formData.email }); // Navigate to Sign In screen
       }
     } catch (error) {

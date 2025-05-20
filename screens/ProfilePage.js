@@ -10,11 +10,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileHeader from "../components/ProfileHeader"; // Import ProfileHeader component
 import UserInfo from "../components/UserInfo"; // Import UserInfo component
 import { useNavigation } from "@react-navigation/native";
-
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProfilePage = ({ onEditPress, onLogoutPress }) => {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
-
+  const removeUserFromStorage = async () => {
+    try {
+      await AsyncStorage.removeItem('userData');
+      console.log('User removed from storage.');
+    } catch (error) {
+      console.error('Failed to remove user from storage:', error);
+    }
+  };
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -51,6 +58,7 @@ const ProfilePage = ({ onEditPress, onLogoutPress }) => {
 
       {/* Logout Button */}
       <TouchableOpacity onPress={()=>{
+        removeUserFromStorage()
         navigation.navigate('welcom')
       }} style={styles.logoutButton}>
         <Text style={styles.logoutText}>Logout</Text>

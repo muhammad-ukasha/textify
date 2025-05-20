@@ -31,7 +31,7 @@ const MeetingScreen = () => {
       ],
     },
   ];
-  
+
   const navigation = useNavigation();
   const [userEmail, setUserEmail] = useState("");
   const [allMeetings, setAllMeetings] = useState([]);
@@ -41,31 +41,32 @@ const MeetingScreen = () => {
         try {
           const storedUser = await AsyncStorage.getItem("userData");
           const parsedUser = JSON.parse(storedUser);
-          const email = parsedUser?.email;
+          const email = parsedUser?.id;
           setUserEmail(email);
-
+          // console.log(email)
           const res = await axiosInstance.get("/list-meeting");
           const meetingsFromServer = res.data;
-          console.log(res.data);
           // Filter meetings where user is a participant
-          const userMeetings = meetingsFromServer.filter(
-            (meeting) =>
-              meeting.organizer === email ||
-              meeting.participants.some((p) => p.email === email)
-          );
+          console.log("1", meetingsFromServer[0].participants[0].user._id);
+          console.log("2", email);
 
-          setAllMeetings(userMeetings)
+          const userMeetings = meetingsFromServer.filter((meeting) =>
+            // console.log(meeting.participants)
+            meeting.participants.some((p) => p.user._id === email)
+          );
+          console.log(meetingsFromServer);
+          setAllMeetings(userMeetings);
+          // console.log(meetingsFromServer.participants[0]);
         } catch (error) {
           setAllMeetings(dummyMeetings);
           console.error("Error fetching meetings:", error.message);
-
         }
       };
 
       fetchMeetings();
     }, [])
   );
-
+  // console.log(allMeetings)
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [chooseOptionModal, setChooseOptionModal] = useState(false); // Popup modal state
@@ -109,12 +110,39 @@ const MeetingScreen = () => {
     <View style={styles.card}>
       <Text style={styles.date}>{item.date}</Text>
       <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.meetingId}>Meeting ID: {item.meetingId}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
+        <Text style={styles.meetingId}>Meeting ID: {item.meetingId}</Text>
+        <View
+          style={[
+            styles.statusBadge,
+            item.status === "started"
+              ? styles.statusStarted
+              : styles.statusPending,
+          ]}
+        >
+          <Text style={styles.statusBadgeText}>
+            {item.status === "started" ? "Started" : "scheduled"}
+          </Text>
+        </View>
+      </View>
+
       <View style={styles.buttonRow}>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("MainMeetingScreen", { meeting: item })
-          }
+          onPress={() => {
+            console.log(item.status)
+            if (item.status === "started") {
+              navigation.navigate("MainMeetingScreen", { meeting: item });
+            } else {
+              alert("Meeting has not started yet.");
+            }
+          }}
           style={styles.joinButton}
         >
           <Text style={styles.buttonText}>Join</Text>
@@ -140,22 +168,9 @@ const MeetingScreen = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Meeting App</Text>
         <View style={styles.headerButtons}>
-          <TouchableOpacity
-            style={[styles.headerBtn, styles.headerBtnFilled]}
-            onPress={handleStartMeeting} // Trigger the option modal when Start Meeting is clicked
-          >
-            <Text style={[styles.headerBtnText, styles.headerBtnTextLight]}>
-              Start Meeting
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.headerBtn, styles.headerBtnOutline]}
-            onPress={() => navigation.navigate("JoinMeetingScreen")}
-          >
-            <Text style={[styles.headerBtnText, styles.headerBtnPrimary]}>
-              Join a Meeting
-            </Text>
-          </TouchableOpacity>
+         
+         
+       
         </View>
       </View>
 
@@ -191,7 +206,10 @@ const MeetingScreen = () => {
               <Text style={styles.value}>{selectedMeeting?.subject}</Text>
             </Text>
             <Text style={styles.label}>
-              When: <Text style={styles.value}>{selectedMeeting?.when}</Text>
+              When:{" "}
+              <Text style={styles.value}>
+                {selectedMeeting?.time} "" {selectedMeeting?.date}
+              </Text>
             </Text>
             <Text style={styles.label}>
               Description:{" "}
@@ -200,7 +218,8 @@ const MeetingScreen = () => {
             <Text style={styles.label}>Participants:</Text>
             {selectedMeeting?.participants.map((p, index) => (
               <Text key={index} style={styles.value}>
-                • {p.name} ({p.email})
+                • {p.user?.firstname ?? "Unknown"} {p.user?.lastname ?? ""} (
+                {p.user?.email ?? "No email"})
               </Text>
             ))}
           </View>
@@ -245,6 +264,23 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingHorizontal: 20,
   },
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  statusStarted: {
+    backgroundColor: "#4CAF50", // Green for started
+  },
+  statusPending: {
+    backgroundColor: "#FFC107", // Amber for pending
+  },
+  statusBadgeText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+
   header: {
     backgroundColor: "#FAFAFA", // white color for the top curve
     paddingTop: 40,

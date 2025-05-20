@@ -86,7 +86,7 @@ const addMeeting = async (req, res) => {
 
 const getMeetings = async (req, res) => {
   try {
-    const meetings = await Meeting.find();
+    const meetings = await Meeting.find().populate("participants.user", "firstname lastname email");
     res.status(200).json(meetings);
   } catch (error) {
     console.log(error);

@@ -65,32 +65,32 @@ const App = () => {
         component={TranscriptPage}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="DemoAudioScreen"
         component={DemoAudioScreen}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="RecordingScreen"
         component={RecordingScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       {/* Add InstantMeetingScreen here */}
-      <Stack.Screen
+      {/* <Stack.Screen
         name="InstantMeetingScreen"
         component={InstantMeetingScreen}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="ScheduleMeetingScreen"
         component={ScheduleMeetingScreen}
         options={{ headerShown: false }} // Added the closing tag for ScheduleMeetingScreen
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="JoinMeetingScreen"
         component={JoinMeetingScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
 
     </Stack.Navigator>
   );
