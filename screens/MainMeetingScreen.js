@@ -16,7 +16,7 @@ import { useRoute } from "@react-navigation/native";
 const MeetingScreen = () => {
   const route = useRoute();
   const { meeting } = route.params;
-  console.log(meeting.participants[0].user);
+  console.log(meeting);
   const [showInfo, setShowInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [recordingStatus, setRecordingStatus] = useState("");

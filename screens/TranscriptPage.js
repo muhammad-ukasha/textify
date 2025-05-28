@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 
-const API_URL = "https://de56-223-123-113-91.ngrok-free.app";
+const API_URL = "https://02fb-43-246-221-125.ngrok-free.app";
 const POLL_INTERVAL = 30000;
 
 const TranscriptScreen = () => {

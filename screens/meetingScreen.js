@@ -13,6 +13,9 @@ import {
 } from "react-native";
 // import InstantMeetingScreen from "./InstantMeetingScreen";
 import axiosInstance from "../api/axiosInstance";
+import axios from "axios";
+
+const API_URL = "https://6686-43-246-221-125.ngrok-free.app";
 
 const MeetingScreen = () => {
   const dummyMeetings = [
@@ -47,7 +50,7 @@ const MeetingScreen = () => {
           const res = await axiosInstance.get("/list-meeting");
           const meetingsFromServer = res.data;
           // Filter meetings where user is a participant
-          console.log("1", meetingsFromServer[0].participants[0].user._id);
+          console.log("1", meetingsFromServer[0]);
           console.log("2", email);
 
           const userMeetings = meetingsFromServer.filter((meeting) =>
@@ -70,6 +73,26 @@ const MeetingScreen = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [chooseOptionModal, setChooseOptionModal] = useState(false); // Popup modal state
+  const handleViewSummary = async (meetingId) => {
+    try {
+      // Make API call to get summary text file for the given meetingId
+      const res = await axios.get(`${API_URL}/meeting-summary/${meetingId}`, {
+        responseType: "text",
+      });
+      const summaryText = res.data.summary; // Assuming the API returns { summary: "text content" }
+
+      if (!summaryText) {
+        alert("Summary is not available for this meeting.");
+        return;
+      }
+
+      // Navigate to summary screen with summaryText as param
+      navigation.navigate("MeetingSummaryScreen", { summaryText, meetingId });
+    } catch (error) {
+      console.error("Error fetching summary:", error.message);
+      alert("Failed to load meeting summary.");
+    }
+  };
 
   const openDetails = (meeting) => {
     setSelectedMeeting(meeting);
@@ -128,7 +151,7 @@ const MeetingScreen = () => {
           ]}
         >
           <Text style={styles.statusBadgeText}>
-            {item.status === "started" ? "Started" : "scheduled"}
+            {item.status === "started" ? "Started" : "completed"}
           </Text>
         </View>
       </View>
@@ -136,7 +159,7 @@ const MeetingScreen = () => {
       <View style={styles.buttonRow}>
         <TouchableOpacity
           onPress={() => {
-            console.log(item.status)
+            console.log(item.status);
             if (item.status === "started") {
               navigation.navigate("MainMeetingScreen", { meeting: item });
             } else {
@@ -145,19 +168,19 @@ const MeetingScreen = () => {
           }}
           style={styles.joinButton}
         >
-          <Text style={styles.buttonText}>Join</Text>
+          <Text style={styles.buttonText}>Join </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.detailsButton}
           onPress={() => openDetails(item)}
         >
-          <Text style={styles.buttonText}>Show Details</Text>
+          <Text style={styles.buttonText}>Show Details </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.dismissButton}
-          onPress={() => dismissMeeting(item.id)}
+          style={styles.detailsButton} // reuse detailsButton styling or create new style if you want
+          onPress={() => handleViewSummary(item._id)}
         >
-          <Text style={styles.buttonText}>Dismiss</Text>
+          <Text style={styles.buttonText}>View Summary </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -167,11 +190,7 @@ const MeetingScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Meeting App</Text>
-        <View style={styles.headerButtons}>
-         
-         
-       
-        </View>
+        <View style={styles.headerButtons}></View>
       </View>
 
       <Text style={styles.screenHeading}>Meetings</Text>
@@ -350,7 +369,7 @@ const styles = StyleSheet.create({
   },
   meetingId: {
     fontSize: 14,
-    color: "#333",
+    color: "black",
     marginBottom: 10,
   },
   buttonRow: {

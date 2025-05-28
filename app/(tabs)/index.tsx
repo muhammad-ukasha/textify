@@ -1,33 +1,27 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
-
 // Import screens
-import Signup from "../../screens/signup";
+// import Signup from "../../screens/signup";
 import SignupScreen from "../../screens/SignUpScreen";
 import SignInScreen from "@/screens/signInScreen";
-import MeetingScreen from "../../screens/meetingScreen";
 import otpScreen from "../../screens/otpScreen";
-import signup from "../../screens/signup";
+import Signup from "../../screens/signup";
 import ForgetPasswordScreen from "../../screens/forgetPasswordScreen ";
 import MainMeetingScreen from "../../screens/MainMeetingScreen";
 import TranscriptPage from "../../screens/TranscriptPage";
 import MeetingTabs from "../../screens/MeetingTabs";
-import DemoAudioScreen from "../../screens/demoScreen";
-import RecordingScreen from "../../screens/RecordingScreen";
-import InstantMeetingScreen from "../../screens/InstantMeetingScreen"; // Import InstantMeetingScreen
-import ScheduleMeetingScreen from "../../screens/ScheduleMeetingScreen";
-import JoinMeetingScreen from "../../screens/JoinMeetingScreen";
+import MeetingSummaryScreen from "../../screens/MeetingSummaryScreen";
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  console.log(SignupScreen , SignInScreen,otpScreen,Signup,ForgetPasswordScreen,MainMeetingScreen,MainMeetingScreen,TranscriptPage,MeetingTabs,MeetingSummaryScreen)
   return (
     <Stack.Navigator initialRouteName="welcom">
       <Stack.Screen
         name="welcom"
-        component={signup}
+        component={Signup}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -65,11 +59,11 @@ const App = () => {
         component={TranscriptPage}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name="DemoAudioScreen"
-        component={DemoAudioScreen}
+      <Stack.Screen
+        name="MeetingSummaryScreen"
+        component={MeetingSummaryScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
       {/* <Stack.Screen
         name="RecordingScreen"
         component={RecordingScreen}
@@ -91,7 +85,6 @@ const App = () => {
         component={JoinMeetingScreen}
         options={{ headerShown: false }}
       /> */}
-
     </Stack.Navigator>
   );
 };
