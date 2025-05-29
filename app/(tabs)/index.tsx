@@ -1,4 +1,4 @@
-import React from "react";
+import React = require("react");
 import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 // Import screens
@@ -16,7 +16,7 @@ import MeetingSummaryScreen from "../../screens/MeetingSummaryScreen";
 const Stack = createStackNavigator();
 
 const App = () => {
-  console.log(SignupScreen , SignInScreen,otpScreen,Signup,ForgetPasswordScreen,MainMeetingScreen,MainMeetingScreen,TranscriptPage,MeetingTabs,MeetingSummaryScreen)
+  // console.log(SignupScreen , SignInScreen,otpScreen,Signup,ForgetPasswordScreen,MainMeetingScreen,MainMeetingScreen,TranscriptPage,MeetingTabs,MeetingSummaryScreen)
   return (
     <Stack.Navigator initialRouteName="welcom">
       <Stack.Screen

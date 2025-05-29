@@ -12,29 +12,39 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 
-const API_URL = "https://02fb-43-246-221-125.ngrok-free.app";
+const API_URL = "https://fe0634b5-b9ef-4605-8312-3d014ea3ce6a-00-2i7vpu8mwwwpu.sisko.replit.dev";
 const POLL_INTERVAL = 30000;
+import { useRoute } from "@react-navigation/native";
 
 const TranscriptScreen = () => {
+  const route = useRoute();
+
+  const { meeting } = route.params;
+  const id = meeting.meetingId;
   const navigation = useNavigation();
   const [transcripts, setTranscripts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
-
+  function getStartTime(timeRange) {
+    if (!timeRange) return "";
+    return timeRange.split("-")[0]; // "05:31:01" from "05:31:01-05:31:02"
+  }
   const fetchTranscripts = async () => {
     try {
-      const listResponse = await axios.get(`${API_URL}/list-transcripts`, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+      const listResponse = await axios.get(
+        `${API_URL}/list-transcripts?meeting_id=${id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const listData = listResponse.data;
-      console.log(listData);
-
+      console.log("listData", listData);
       if (listData.status === "success" && listData.transcripts) {
         const sortedTranscripts = listData.transcripts.sort(
           (a, b) => new Date(b.last_modified) - new Date(a.last_modified)
@@ -43,22 +53,22 @@ const TranscriptScreen = () => {
         const transcriptsWithContent = await Promise.all(
           sortedTranscripts.map(async (t) => {
             try {
-              const response = await axios.get(`${API_URL}${t.exact_url}`, {
-                headers: {
-                  Accept: "application/json",
-                },
-              });
+              const response = await axios.get(
+                `${API_URL}/get-transcripts/${t.key}`,
+                {
+                  headers: {
+                    Accept: "application/json",
+                  },
+                }
+              );
 
               const data = response.data;
+              console.log("get", data);
 
               // Handle structured array or fallback to split string
-              let content = [];
+              // let content = [];
 
-              if (Array.isArray(data.transcript)) {
-                content = data.transcript;
-              } else if (typeof data.transcript === "string") {
-                content = data.transcript.split("\n");
-              }
+              let content = Array.isArray(data) ? data : [];
 
               return {
                 key: t.key,
@@ -78,6 +88,7 @@ const TranscriptScreen = () => {
         );
 
         setTranscripts(transcriptsWithContent);
+        console.log("transcripts", transcripts);
         setLastUpdated(new Date());
         setError(null);
       } else {
@@ -161,8 +172,8 @@ const TranscriptScreen = () => {
               >
                 {transcript.content.map((line, idx) => {
                   // Ensure line.time exists, else fallback to a default or empty string
-                  const timeStamp = line.time
-                    ? new Date(line.time).toLocaleTimeString() // Format timestamp
+                  const timeStamp = line.time_range
+                    ? line.time_range
                     : "";
 
                   return (

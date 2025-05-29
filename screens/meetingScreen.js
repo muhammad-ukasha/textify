@@ -15,7 +15,7 @@ import {
 import axiosInstance from "../api/axiosInstance";
 import axios from "axios";
 
-const API_URL = "https://6686-43-246-221-125.ngrok-free.app";
+const API_URL = "https://1113-43-246-221-125.ngrok-free.app";
 
 const MeetingScreen = () => {
   const dummyMeetings = [
@@ -76,9 +76,10 @@ const MeetingScreen = () => {
   const handleViewSummary = async (meetingId) => {
     try {
       // Make API call to get summary text file for the given meetingId
-      const res = await axios.get(`${API_URL}/meeting-summary/${meetingId}`, {
+      const res = await axios.get(`${API_URL}/get-summary/${meetingId}`, {
         responseType: "text",
       });
+      // console.log("res" , res)
       const summaryText = res.data.summary; // Assuming the API returns { summary: "text content" }
 
       if (!summaryText) {

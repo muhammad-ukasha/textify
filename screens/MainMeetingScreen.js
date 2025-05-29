@@ -50,68 +50,70 @@ const MeetingScreen = () => {
       setLoading(false); // Hide loader
     }
   };
-  const handleTranscriptPage = () => {
-   
-  };
+  const handleTranscriptPage = () => {};
   const handleEndMeeting = () => {
-    navigation.navigate("meetingScreen")
+    navigation.navigate("meetingScreen");
   };
   return (
     <View style={styles.container}>
-    {loading && (
-      <View style={styles.loaderContainer}>
-        <Loader />
-      </View>
-    )}
+      {loading && (
+        <View style={styles.loaderContainer}>
+          <Loader />
+        </View>
+      )}
 
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.participantBox}>
-        <Text>{meeting.organizer} (Host)</Text>
-      </View>
-      {meeting.participants
-        .filter((p) => p.attendanceStatus === "present")
-        .map((p, i) => (
-          <View key={i} style={styles.participantBox}>
-            <Text>
-              {p.user.firstname} {p.user.lastname}
-            </Text>
-          </View>
-        ))}
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.participantBox}>
+          <Text>{meeting.organizer} (Host)</Text>
+        </View>
+        {meeting.participants
+          .filter((p) => p.attendanceStatus === "present")
+          .map((p, i) => (
+            <View key={i} style={styles.participantBox}>
+              <Text>
+                {p.user.firstname} {p.user.lastname}
+              </Text>
+            </View>
+          ))}
 
-      <View style={styles.statusBox}>
-        <Text style={styles.statusText}>{recordingStatus}</Text>
-      </View>
-    </ScrollView>
+        <View style={styles.statusBox}>
+          <Text style={styles.statusText}>{recordingStatus}</Text>
+        </View>
+      </ScrollView>
 
-    {/* Info Box */}
-    {showInfo && (
-      <View style={styles.infoBox}>
-        <Text style={styles.infoText}>
-          This is a {meeting.title} meeting. {meeting.organizer} is the host.
-        </Text>
-      </View>
-    )}
+      {/* Info Box */}
+      {showInfo && (
+        <View style={styles.infoBox}>
+          <Text style={styles.infoText}>
+            This is a {meeting.title} meeting. {meeting.organizer} is the host.
+          </Text>
+        </View>
+      )}
 
-    {/* Bottom Toolbar */}
-    <View style={styles.toolbar}>
-      <TouchableOpacity onPress={() => setShowInfo(!showInfo)}>
-        <Ionicons name="information-circle" size={28} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleTranscriptPage}>
-        <Ionicons name="copy" size={28} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("TranscriptPage")}>
-        <Ionicons name="document-text" size={28} color="black" />
-      </TouchableOpacity>
-      <Ionicons name="mic" size={28} color="black" />
-      <TouchableOpacity onPress={handleEndMeeting}>
-        <Ionicons name="call" size={28} color="red" />
-      </TouchableOpacity>
+      {/* Bottom Toolbar */}
+      <View style={styles.toolbar}>
+        <TouchableOpacity onPress={() => setShowInfo(!showInfo)}>
+          <Ionicons name="information-circle" size={28} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleTranscriptPage}>
+          <Ionicons name="copy" size={28} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("TranscriptPage", { meeting: meeting })
+          }
+        >
+          <Ionicons name="document-text" size={28} color="black" />
+        </TouchableOpacity>
+        <Ionicons name="mic" size={28} color="black" />
+        <TouchableOpacity onPress={handleEndMeeting}>
+          <Ionicons name="call" size={28} color="red" />
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
   );
 };
 
@@ -178,4 +180,3 @@ const styles = StyleSheet.create({
 });
 
 export default MeetingScreen;
-
